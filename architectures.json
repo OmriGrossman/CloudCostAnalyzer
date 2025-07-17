@@ -1,0 +1,664 @@
+{
+  "architectures": [
+    {
+      "user_metadata": null,
+      "metadata": {
+        "architecture_description": "A cloud architecture for AI text detection using Amazon EKS, EC2, and S3 with CloudWatch monitoring. The system is deployed within a VPC for secure networking and includes distributed compute resources with centralized storage and monitoring.",
+        "architecture_name": "Cloud AI Text Detection Architecture",
+        "architecture_id": "ARCH-AI-TEXT-DETECT-AWS-001-1",
+        "workplan_id": "WP_CLOUD_AI_TEXT_DETECTION",
+        "action_definition_id": null,
+        "parent_architecture_id": null
+      },
+      "components": [
+        {
+          "visual_indicators": {
+            "icon": "eks",
+            "label": "Amazon EKS"
+          },
+          "component_type": "AmazonEKS",
+          "component_label": "EKS Cluster",
+          "component_id": "eks-1",
+          "component_groups": null,
+          "component_environments": null,
+          "component_provider": "aws",
+          "component_resource_config": null,
+          "component_pricing": {},
+          "ref_abs_component_id": "compute_1"
+        },
+        {
+          "visual_indicators": {
+            "icon": "ec2",
+            "label": "Amazon EC2"
+          },
+          "component_type": "AmazonEC2",
+          "component_label": "EC2 Instance",
+          "component_id": "ec2-1",
+          "component_groups": null,
+          "component_environments": null,
+          "component_provider": "aws",
+          "component_resource_config": {
+            "attributes": [
+              {
+                "sku": "TZZ9BKWVQ2QXG4TF",
+                "memory": 16384,
+                "vcpu": 4,
+                "instance_family": "GPU instance",
+                "region": "il-central-1",
+                "tenancy": "Shared",
+                "operating_system": "Linux",
+                "instance_type": "g5.xlarge",
+                "priceperunit": 0.23583,
+                "unit": "Hrs",
+                "number of instances": 1.0,
+                "utilization (hours/month)": 24.0,
+                "storage (gb)": 1.0,
+                "requests": 1.0,
+                "serviceusageprice": 5.6599200000000005
+              }
+            ]
+          },
+          "component_pricing": {
+            "on_demand": 5.6599200000000005
+          },
+          "ref_abs_component_id": "compute_2"
+        },
+        {
+          "visual_indicators": {
+            "icon": "vpc",
+            "label": "Amazon VPC"
+          },
+          "component_type": "AmazonVPC",
+          "component_label": "VPC Network",
+          "component_id": "vpc-1",
+          "component_groups": null,
+          "component_environments": null,
+          "component_provider": "aws",
+          "component_resource_config": {
+            "attributes": [
+              {
+                "ratecode": "5TTN47UH8KGN7UN2.JRTCKXETXF.6YS6EN2CT7",
+                "sku": "5TTN47UH8KGN7UN2",
+                "region code": "il-central-1",
+                "pricedescription": "USD0.15 per Hourly for ClientVPN-EndpointHours:ClientVPNEndpoints in Israel (Tel Aviv)",
+                "group": "AWSClientVPN",
+                "operation": "ClientVPNEndpoints",
+                "unit": "Hourly",
+                "priceperunit": 0.15,
+                "number of instances": 1.0,
+                "utilization (hours/month)": 24.0,
+                "storage (gb)": 1.0,
+                "requests": 1.0,
+                "serviceusageprice": 3.5999999999999996
+              }
+            ]
+          },
+          "component_pricing": {
+            "on_demand": 3.5999999999999996
+          },
+          "ref_abs_component_id": "network_1"
+        },
+        {
+          "visual_indicators": {
+            "icon": "s3",
+            "label": "Amazon S3"
+          },
+          "component_type": "AmazonS3",
+          "component_label": "S3 Storage",
+          "component_id": "s3-1",
+          "component_groups": null,
+          "component_environments": null,
+          "component_provider": "aws",
+          "component_resource_config": {
+            "attributes": [
+              {
+                "sku": "6KKAXGJA8JDPZDA3",
+                "storage_class": "Archive",
+                "region": "il-central-1",
+                "priceperunit": 0.00405,
+                "unit": "Hrs",
+                "number of instances": 1.0,
+                "utilization (hours/month)": 24.0,
+                "storage (gb)": 1.0,
+                "requests": 1.0,
+                "serviceusageprice": 0.0972
+              }
+            ]
+          },
+          "component_pricing": {
+            "on_demand": 0.0972
+          },
+          "ref_abs_component_id": "storage_1"
+        },
+        {
+          "visual_indicators": {
+            "icon": "cloudwatch",
+            "label": "Amazon CloudWatch"
+          },
+          "component_type": "AmazonCloudWatch",
+          "component_label": "CloudWatch Monitoring",
+          "component_id": "cloudwatch-1",
+          "component_groups": null,
+          "component_environments": null,
+          "component_provider": "aws",
+          "component_resource_config": null,
+          "component_pricing": {},
+          "ref_abs_component_id": "analytics_1"
+        }
+      ],
+      "connections": [
+        {
+          "connection_type": "data_flow",
+          "label": null,
+          "connection_id": "conn-eks-1-s3-1",
+          "ref_source_component_id": "eks-1",
+          "ref_target_component_id": "s3-1",
+          "bidirectional": true
+        },
+        {
+          "connection_type": "data_flow",
+          "label": null,
+          "connection_id": "conn-ec2-1-s3-1",
+          "ref_source_component_id": "ec2-1",
+          "ref_target_component_id": "s3-1",
+          "bidirectional": true
+        },
+        {
+          "connection_type": "network",
+          "label": null,
+          "connection_id": "conn-vpc-1-eks-1",
+          "ref_source_component_id": "vpc-1",
+          "ref_target_component_id": "eks-1",
+          "bidirectional": true
+        },
+        {
+          "connection_type": "network",
+          "label": null,
+          "connection_id": "conn-vpc-1-ec2-1",
+          "ref_source_component_id": "vpc-1",
+          "ref_target_component_id": "ec2-1",
+          "bidirectional": true
+        },
+        {
+          "connection_type": "monitoring",
+          "label": null,
+          "connection_id": "conn-cloudwatch-1-eks-1",
+          "ref_source_component_id": "cloudwatch-1",
+          "ref_target_component_id": "eks-1",
+          "bidirectional": true
+        },
+        {
+          "connection_type": "monitoring",
+          "label": null,
+          "connection_id": "conn-cloudwatch-1-ec2-1",
+          "ref_source_component_id": "cloudwatch-1",
+          "ref_target_component_id": "ec2-1",
+          "bidirectional": true
+        },
+        {
+          "connection_type": "monitoring",
+          "label": null,
+          "connection_id": "conn-cloudwatch-1-s3-1",
+          "ref_source_component_id": "cloudwatch-1",
+          "ref_target_component_id": "s3-1",
+          "bidirectional": true
+        }
+      ]
+    },
+    {
+      "user_metadata": null,
+      "metadata": {
+        "architecture_description": "A serverless and container-based architecture for AI text detection using AWS Lambda, EKS, and S3, with VPC networking and NAT Gateway for secure communication",
+        "architecture_name": "AI Text Detection AWS Architecture",
+        "architecture_id": "ARCH-AI-TEXT-DETECT-AWS-001-2",
+        "workplan_id": "WPLAN-AI-TEXT-DETECT-AWS-001",
+        "action_definition_id": null,
+        "parent_architecture_id": null
+      },
+      "components": [
+        {
+          "visual_indicators": {
+            "icon": "AWS Lambda icon",
+            "color": "orange"
+          },
+          "component_type": "AWSLambda",
+          "component_label": "Lambda Function",
+          "component_id": "lambda-1",
+          "component_groups": null,
+          "component_environments": null,
+          "component_provider": "aws",
+          "component_resource_config": {
+            "attributes": [
+              {
+                "ratecode": "YV5CBXWN5ARWJ7V9.JRTCKXETXF.6YS6EN2CT7",
+                "sku": "YV5CBXWN5ARWJ7V9",
+                "termtype": "OnDemand",
+                "pricedescription": "USD 0.00000021 per Requests for Request-ARM in Israel (Tel Aviv)",
+                "region code": "il-central-1",
+                "product family": "Serverless",
+                "unit": "Requests",
+                "priceperunit": 2.1e-07,
+                "startingrange": "0",
+                "endingrange": "Inf",
+                "number of instances": 1.0,
+                "utilization (hours/month)": 1.0,
+                "storage (gb)": 1.0,
+                "requests": 1000000000.0,
+                "serviceusageprice": 210.0
+              }
+            ]
+          },
+          "component_pricing": {
+            "on_demand": 210.0
+          },
+          "ref_abs_component_id": "compute_1"
+        },
+        {
+          "visual_indicators": {
+            "icon": "Amazon EKS icon",
+            "color": "orange"
+          },
+          "component_type": "AmazonEKS",
+          "component_label": "EKS Cluster",
+          "component_id": "eks-1",
+          "component_groups": null,
+          "component_environments": null,
+          "component_provider": "aws",
+          "component_resource_config": null,
+          "component_pricing": {},
+          "ref_abs_component_id": "compute_2"
+        },
+        {
+          "visual_indicators": {
+            "icon": "Amazon S3 icon",
+            "color": "red"
+          },
+          "component_type": "AmazonS3",
+          "component_label": "S3 Bucket",
+          "component_id": "s3-1",
+          "component_groups": null,
+          "component_environments": null,
+          "component_provider": "aws",
+          "component_resource_config": {
+            "attributes": [
+              {
+                "sku": "6KKAXGJA8JDPZDA3",
+                "storage_class": "Archive",
+                "region": "il-central-1",
+                "priceperunit": 0.00405,
+                "unit": "Hrs",
+                "number of instances": 1.0,
+                "utilization (hours/month)": 24.0,
+                "storage (gb)": 1.0,
+                "requests": 1.0,
+                "serviceusageprice": 0.0972
+              }
+            ]
+          },
+          "component_pricing": {
+            "on_demand": 0.0972
+          },
+          "ref_abs_component_id": "storage_1"
+        },
+        {
+          "visual_indicators": {
+            "icon": "Amazon VPC icon",
+            "color": "gray"
+          },
+          "component_type": "AmazonVPC",
+          "component_label": "VPC",
+          "component_id": "vpc-1",
+          "component_groups": null,
+          "component_environments": null,
+          "component_provider": "aws",
+          "component_resource_config": {
+            "attributes": [
+              {
+                "ratecode": "5TTN47UH8KGN7UN2.JRTCKXETXF.6YS6EN2CT7",
+                "sku": "5TTN47UH8KGN7UN2",
+                "region code": "il-central-1",
+                "pricedescription": "USD0.15 per Hourly for ClientVPN-EndpointHours:ClientVPNEndpoints in Israel (Tel Aviv)",
+                "group": "AWSClientVPN",
+                "operation": "ClientVPNEndpoints",
+                "unit": "Hourly",
+                "priceperunit": 0.15,
+                "number of instances": 1.0,
+                "utilization (hours/month)": 730.0,
+                "storage (gb)": 1.0,
+                "requests": 1.0,
+                "serviceusageprice": 109.5
+              }
+            ]
+          },
+          "component_pricing": {
+            "on_demand": 109.5
+          },
+          "ref_abs_component_id": "network_1"
+        },
+        {
+          "visual_indicators": {
+            "icon": "NAT Gateway icon",
+            "color": "gray"
+          },
+          "component_type": "NATGateway",
+          "component_label": "NAT Gateway",
+          "component_id": "nat-1",
+          "component_groups": null,
+          "component_environments": null,
+          "component_provider": "aws",
+          "component_resource_config": null,
+          "component_pricing": {},
+          "ref_abs_component_id": "network_1"
+        }
+      ],
+      "connections": [
+        {
+          "connection_type": "data_flow",
+          "label": null,
+          "connection_id": "conn-lambda-1-s3-1",
+          "ref_source_component_id": "lambda-1",
+          "ref_target_component_id": "s3-1",
+          "bidirectional": true
+        },
+        {
+          "connection_type": "data_flow",
+          "label": null,
+          "connection_id": "conn-eks-1-s3-1",
+          "ref_source_component_id": "eks-1",
+          "ref_target_component_id": "s3-1",
+          "bidirectional": true
+        },
+        {
+          "connection_type": "network",
+          "label": null,
+          "connection_id": "conn-vpc-1-lambda-1",
+          "ref_source_component_id": "vpc-1",
+          "ref_target_component_id": "lambda-1",
+          "bidirectional": true
+        },
+        {
+          "connection_type": "network",
+          "label": null,
+          "connection_id": "conn-vpc-1-eks-1",
+          "ref_source_component_id": "vpc-1",
+          "ref_target_component_id": "eks-1",
+          "bidirectional": true
+        },
+        {
+          "connection_type": "network",
+          "label": null,
+          "connection_id": "conn-vpc-1-nat-1",
+          "ref_source_component_id": "vpc-1",
+          "ref_target_component_id": "nat-1",
+          "bidirectional": true
+        }
+      ]
+    },
+    {
+      "user_metadata": null,
+      "metadata": {
+        "architecture_description": "A comprehensive AWS architecture for AI text detection leveraging EKS, Lambda, EC2, and S3 storage, all secured within a VPC with NAT Gateway for enhanced network security and connectivity.",
+        "architecture_name": "AI Text Detection AWS Architecture",
+        "architecture_id": "ARCH-AI-TEXT-DETECT-AWS-001-3",
+        "workplan_id": "WP_AI_TEXT_DETECTION_AWS_DEPLOY",
+        "action_definition_id": null,
+        "parent_architecture_id": null
+      },
+      "components": [
+        {
+          "visual_indicators": {
+            "icon": "eks_icon",
+            "label": "EKS Cluster"
+          },
+          "component_type": "AmazonEKS",
+          "component_label": "EKS Cluster",
+          "component_id": "eks-1",
+          "component_groups": null,
+          "component_environments": null,
+          "component_provider": "aws",
+          "component_resource_config": null,
+          "component_pricing": {},
+          "ref_abs_component_id": "compute_1"
+        },
+        {
+          "visual_indicators": {
+            "icon": "lambda_icon",
+            "label": "Lambda Function"
+          },
+          "component_type": "AWSLambda",
+          "component_label": "Lambda Function",
+          "component_id": "lambda-1",
+          "component_groups": null,
+          "component_environments": null,
+          "component_provider": "aws",
+          "component_resource_config": {
+            "attributes": [
+              {
+                "ratecode": "YV5CBXWN5ARWJ7V9.JRTCKXETXF.6YS6EN2CT7",
+                "sku": "YV5CBXWN5ARWJ7V9",
+                "termtype": "OnDemand",
+                "pricedescription": "USD 0.00000021 per Requests for Request-ARM in Israel (Tel Aviv)",
+                "region code": "us-east-1",
+                "product family": "Serverless",
+                "unit": "Requests",
+                "priceperunit": 2.1e-07,
+                "startingrange": "0",
+                "endingrange": "Inf",
+                "number of instances": 1.0,
+                "utilization (hours/month)": 1.0,
+                "storage (gb)": 1.0,
+                "requests": 1000000000.0,
+                "serviceusageprice": 210.0
+              }
+            ]
+          },
+          "component_pricing": {
+            "on_demand": 210.0
+          },
+          "ref_abs_component_id": "compute_1"
+        },
+        {
+          "visual_indicators": {
+            "icon": "ec2_icon",
+            "label": "EC2 Instance"
+          },
+          "component_type": "AmazonEC2",
+          "component_label": "AI Processing Instance",
+          "component_id": "ec2-1",
+          "component_groups": null,
+          "component_environments": null,
+          "component_provider": "aws",
+          "component_resource_config": {
+            "attributes": [
+              {
+                "sku": "TZZ9BKWVQ2QXG4TF",
+                "memory": 16384,
+                "vcpu": 4,
+                "instance_family": "GPU instance",
+                "region code": "us-east-1",
+                "tenancy": "Shared",
+                "operating_system": "Linux",
+                "instance_type": "g5.xlarge",
+                "priceperunit": 0.23583,
+                "unit": "Hrs",
+                "number of instances": 1.0,
+                "utilization (hours/month)": 730.0,
+                "storage (gb)": 1.0,
+                "requests": 1.0,
+                "serviceusageprice": 172.1559
+              }
+            ]
+          },
+          "component_pricing": {
+            "on_demand": 172.1559
+          },
+          "ref_abs_component_id": "ai_1"
+        },
+        {
+          "visual_indicators": {
+            "icon": "s3_icon",
+            "label": "S3 Bucket"
+          },
+          "component_type": "AmazonS3",
+          "component_label": "Storage Bucket",
+          "component_id": "s3-1",
+          "component_groups": null,
+          "component_environments": null,
+          "component_provider": "aws",
+          "component_resource_config": {
+            "attributes": [
+              {
+                "sku": "6KKAXGJA8JDPZDA3",
+                "storage_class": "Archive",
+                "region code": "us-east-1",
+                "priceperunit": 0.00405,
+                "unit": "Hrs",
+                "number of instances": 1.0,
+                "utilization (hours/month)": 730.0,
+                "storage (gb)": 1.0,
+                "requests": 1.0,
+                "serviceusageprice": 2.9564999999999997
+              }
+            ]
+          },
+          "component_pricing": {
+            "on_demand": 2.9564999999999997
+          },
+          "ref_abs_component_id": "storage_1"
+        },
+        {
+          "visual_indicators": {
+            "icon": "vpc_icon",
+            "label": "VPC"
+          },
+          "component_type": "AmazonVPC",
+          "component_label": "Virtual Private Cloud",
+          "component_id": "vpc-1",
+          "component_groups": null,
+          "component_environments": null,
+          "component_provider": "aws",
+          "component_resource_config": {
+            "attributes": [
+              {
+                "ratecode": "5TTN47UH8KGN7UN2.JRTCKXETXF.6YS6EN2CT7",
+                "sku": "5TTN47UH8KGN7UN2",
+                "region code": "us-east-1",
+                "pricedescription": "USD0.15 per Hourly for ClientVPN-EndpointHours:ClientVPNEndpoints in US East (N. Virginia)",
+                "group": "AWSClientVPN",
+                "operation": "ClientVPNEndpoints",
+                "unit": "Hourly",
+                "priceperunit": 0.15,
+                "number of instances": 1.0,
+                "utilization (hours/month)": 730.0,
+                "storage (gb)": 1.0,
+                "requests": 1.0,
+                "serviceusageprice": 109.5
+              }
+            ]
+          },
+          "component_pricing": {
+            "on_demand": 109.5
+          },
+          "ref_abs_component_id": "network_1"
+        },
+        {
+          "visual_indicators": {
+            "icon": "nat_icon",
+            "label": "NAT Gateway"
+          },
+          "component_type": "NATGateway",
+          "component_label": "NAT Gateway",
+          "component_id": "nat-1",
+          "component_groups": null,
+          "component_environments": null,
+          "component_provider": "aws",
+          "component_resource_config": null,
+          "component_pricing": {},
+          "ref_abs_component_id": "network_1"
+        }
+      ],
+      "connections": [
+        {
+          "connection_type": "data_flow",
+          "label": null,
+          "connection_id": "conn-eks-1-s3-1",
+          "ref_source_component_id": "eks-1",
+          "ref_target_component_id": "s3-1",
+          "bidirectional": true
+        },
+        {
+          "connection_type": "data_flow",
+          "label": null,
+          "connection_id": "conn-lambda-1-s3-1",
+          "ref_source_component_id": "lambda-1",
+          "ref_target_component_id": "s3-1",
+          "bidirectional": true
+        },
+        {
+          "connection_type": "network",
+          "label": null,
+          "connection_id": "conn-ec2-1-eks-1",
+          "ref_source_component_id": "ec2-1",
+          "ref_target_component_id": "eks-1",
+          "bidirectional": true
+        },
+        {
+          "connection_type": "network",
+          "label": null,
+          "connection_id": "conn-ec2-1-lambda-1",
+          "ref_source_component_id": "ec2-1",
+          "ref_target_component_id": "lambda-1",
+          "bidirectional": true
+        },
+        {
+          "connection_type": "data_flow",
+          "label": null,
+          "connection_id": "conn-ec2-1-s3-1",
+          "ref_source_component_id": "ec2-1",
+          "ref_target_component_id": "s3-1",
+          "bidirectional": true
+        },
+        {
+          "connection_type": "network",
+          "label": null,
+          "connection_id": "conn-vpc-1-eks-1",
+          "ref_source_component_id": "vpc-1",
+          "ref_target_component_id": "eks-1",
+          "bidirectional": true
+        },
+        {
+          "connection_type": "network",
+          "label": null,
+          "connection_id": "conn-vpc-1-lambda-1",
+          "ref_source_component_id": "vpc-1",
+          "ref_target_component_id": "lambda-1",
+          "bidirectional": true
+        },
+        {
+          "connection_type": "network",
+          "label": null,
+          "connection_id": "conn-vpc-1-ec2-1",
+          "ref_source_component_id": "vpc-1",
+          "ref_target_component_id": "ec2-1",
+          "bidirectional": true
+        },
+        {
+          "connection_type": "network",
+          "label": null,
+          "connection_id": "conn-vpc-1-s3-1",
+          "ref_source_component_id": "vpc-1",
+          "ref_target_component_id": "s3-1",
+          "bidirectional": true
+        },
+        {
+          "connection_type": "network",
+          "label": null,
+          "connection_id": "conn-nat-1-vpc-1",
+          "ref_source_component_id": "nat-1",
+          "ref_target_component_id": "vpc-1",
+          "bidirectional": true
+        }
+      ]
+    }
+  ]
+}
